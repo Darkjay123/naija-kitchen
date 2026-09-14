@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Naija Kitchen - Learn to cook Nigerian food</title>
+<meta name="description" content="An interactive Nigerian cooking game. Shop the market, cook egusi, ogbono, rice and stew and vegetable soup step by step, and actually learn the recipe." />
+<meta name="theme-color" content="#120b06" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div id="stage">
+
+  <!-- TITLE -->
+  <section class="scene" id="scene-title" data-scene="title">
+    <div class="bg" style="background-image:url('assets/img/kitchen_bg.png')"></div>
+    <div class="scrim"></div>
+    <div class="title-wrap">
+      <p class="eyebrow">Wajo Studios presents</p>
+      <h1 class="logo">Naija<span>Kitchen</span></h1>
+      <p class="tagline">Go to the market. Fire the pot. Learn the real recipe.</p>
+      <button class="btn big" data-go="home">Start cooking</button>
+      <button class="btn ghost" id="btn-how">How to play</button>
+      <p class="credit">Egusi &middot; Ogbono &middot; Rice &amp; stew &middot; Vegetable soup</p>
+    </div>
+  </section>
+
+  <!-- HOME / RECIPE SELECT -->
+  <section class="scene" id="scene-home" data-scene="home" hidden>
+    <div class="bg" style="background-image:url('assets/img/kitchen_bg.png')"></div>
+    <div class="scrim soft"></div>
+    <header class="hud">
+      <div class="hud-left"><span class="chip">&#8358;<b id="hud-money">0</b></span><span class="chip">Level <b id="hud-level">1</b></span></div>
+      <div class="hud-right"><span class="chip">&#9733; <b id="hud-stars">0</b></span></div>
+    </header>
+    <div class="panel-wrap">
+      <h2 class="h2">Pick today's pot</h2>
+      <p class="sub">Each dish is a real recipe broken into the steps a Nigerian kitchen actually does.</p>
+      <div class="recipe-grid" id="recipe-grid"></div>
+    </div>
+  </section>
+
+  <!-- MARKET -->
+  <section class="scene" id="scene-market" data-scene="market" hidden>
+    <div class="bg" style="background-image:url('assets/img/market_bg.png')"></div>
+    <div class="scrim soft"></div>
+    <header class="hud">
+      <div class="hud-left"><button class="chip back" data-go="home">&#8592; Home</button><span class="chip">&#8358;<b id="market-money">0</b></span></div>
+      <div class="hud-right"><span class="chip" id="market-title">Market</span></div>
+    </header>
+    <div class="market-layout">
+      <aside class="list-card">
+        <h3>Shopping list</h3>
+        <ul id="shopping-list"></ul>
+        <button class="btn" id="btn-to-kitchen" disabled>Go home and cook</button>
+        <p class="hint" id="market-hint">Tap a stall to buy. Watch your money, the market no dey give free thing.</p>
+      </aside>
+      <div class="stalls" id="stalls"></div>
+    </div>
+  </section>
+
+  <!-- KITCHEN -->
+  <section class="scene" id="scene-kitchen" data-scene="kitchen" hidden>
+    <div class="bg" style="background-image:url('assets/img/kitchen_bg.png')"></div>
+    <div class="scrim soft"></div>
+    <header class="hud">
+      <div class="hud-left"><span class="chip" id="kitchen-recipe">Recipe</span></div>
+      <div class="hud-right"><span class="chip">Step <b id="step-no">1</b>/<b id="step-total">1</b></span><span class="chip">Score <b id="kitchen-score">0</b></span></div>
+    </header>
+    <div class="pot-stage">
+      <div class="pot" id="pot">
+        <div class="pot-body"></div>
+        <div class="pot-content" id="pot-content"></div>
+        <div class="steam"><i></i><i></i><i></i></div>
+      </div>
+    </div>
+    <div class="cook-card">
+      <div class="step-head">
+        <h3 id="step-title">Step</h3>
+        <p id="step-instruction">Instruction</p>
+      </div>
+      <div id="minigame" class="minigame"></div>
+      <div class="tip" id="step-tip"></div>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="scene" id="scene-result" data-scene="result" hidden>
+    <div class="bg" id="result-bg"></div>
+    <div class="scrim"></div>
+    <div class="result-wrap">
+      <div class="dish-frame"><img id="result-dish" alt="Finished dish" /></div>
+      <h2 class="h2" id="result-title">Egusi soup</h2>
+      <div class="stars" id="result-stars"></div>
+      <p class="sub" id="result-verdict"></p>
+      <div class="lesson" id="result-lesson"></div>
+      <div class="row">
+        <button class="btn" data-go="home">Cook something else</button>
+        <button class="btn ghost" id="btn-retry">Cook this again</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal-card">
+      <h3 id="modal-title">How to play</h3>
+      <div id="modal-body"></div>
+      <button class="btn" id="modal-close">Got it</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+</div>
+<script src="js/data.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
