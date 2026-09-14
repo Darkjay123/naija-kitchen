@@ -38,7 +38,10 @@
   /* ---------- scenes ---------- */
   function show(name) {
     if (state.cleanup) { state.cleanup(); state.cleanup = null; }
+    if (name !== 'market') stopClip($('#market-video'));
+    if (name !== 'kitchen') stopClip($('#cook-video'));
     $$('.scene').forEach(s => { s.hidden = s.dataset.scene !== name; });
+    window.scrollTo(0, 0);
     if (name === 'home') renderHome();
     if (name === 'market') renderMarket();
     if (name === 'kitchen') renderKitchen();
@@ -88,12 +91,13 @@
     state.basket = [];
     state.stepIndex = 0;
     state.scores = [];
-    show('market');
+    walkTo('market', 'Walking to the market');
   }
 
   /* ---------- market ---------- */
   function renderMarket() {
     const r = state.recipe;
+    playClip($('#market-video'), 'assets/video/market.mp4');
     $('#market-title').textContent = r.name;
     $('#market-money').textContent = state.money.toLocaleString('en-NG');
 
@@ -120,19 +124,21 @@
 
   function renderList() {
     const r = state.recipe;
-    const ul = $('#shopping-list');
-    ul.innerHTML = '';
+    const box = $('#market-list');
+    box.innerHTML = '';
     r.list.forEach(id => {
-      const li = document.createElement('li');
       const got = state.basket.indexOf(id) !== -1;
-      li.className = got ? 'got' : '';
-      li.innerHTML = '<span>' + INGREDIENTS[id].name + '</span>' +
-        (got ? '<span class="ok">\u2713</span>' : '<span>' + naira(INGREDIENTS[id].price) + '</span>');
-      ul.appendChild(li);
+      const el = document.createElement('div');
+      el.className = 'need' + (got ? ' got' : '');
+      el.innerHTML = (got ? '\u2713 ' : '') + INGREDIENTS[id].name +
+        (got ? '' : ' <b>' + naira(INGREDIENTS[id].price) + '</b>');
+      box.appendChild(el);
     });
     const done = r.list.every(id => state.basket.indexOf(id) !== -1);
-    $('#btn-to-kitchen').disabled = !done;
-    if (done) $('#market-hint').textContent = 'Basket complete. Carry am go house.';
+    const btn = $('#btn-to-kitchen');
+    btn.disabled = !done;
+    btn.textContent = done ? 'Carry am go house' : 'Still buying (' +
+      (r.list.length - state.basket.length) + ' left)';
   }
 
   /* haggling: stop the moving marker in the discount band */
@@ -209,6 +215,8 @@
     const shade = POT_COLOURS[Math.min(POT_COLOURS.length - 1,
       Math.floor(state.stepIndex / r.steps.length * POT_COLOURS.length))];
     $('#pot-content').style.background = shade;
+
+    playClip($('#cook-video'), CLIPS[step.type] || CLIPS.simmer);
 
     const mg = $('#minigame');
     mg.innerHTML = '';
@@ -464,6 +472,57 @@
     }
   };
 
+
+  /* ---------- motion layer ----------
+     Each step type plays a looping cooking clip behind the sheet. */
+  const CLIPS = {
+    chop:'assets/video/chop.mp4',
+    heat:'assets/video/boil.mp4',
+    order:'assets/video/boil.mp4',
+    stir:'assets/video/stir.mp4',
+    simmer:'assets/video/boil.mp4',
+    season:'assets/video/stir.mp4'
+  };
+
+  function playClip(el, src) {
+    if (!el) return;
+    if (el.dataset.src !== src) {
+      el.dataset.src = src;
+      el.src = src;
+    }
+    const go = el.play();
+    if (go && go.catch) go.catch(() => { /* autoplay blocked, poster stays */ });
+  }
+  function stopClip(el) { if (el) { try { el.pause(); } catch (e) {} } }
+
+  /* ---------- walk between places ---------- */
+  function walkTo(dest, label) {
+    const road = $('#walk-road'), meter = $('#walk-meter'), img = $('#walk-img');
+    $('#walk-text').textContent = label;
+    img.style.transform = dest === 'home' ? 'scaleX(-1)' : 'none';
+    road.style.animationDirection = dest === 'home' ? 'reverse' : 'normal';
+    $$('.scene').forEach(s => { s.hidden = s.dataset.scene !== 'walk'; });
+
+    const dur = 2600;
+    const t0 = performance.now();
+    let raf, finished = false;
+    function done() {
+      if (finished) return;
+      finished = true;
+      cancelAnimationFrame(raf);
+      $('#walk-skip').removeEventListener('click', done);
+      show(dest);
+    }
+    (function loop(now) {
+      const p = clamp((now - t0) / dur, 0, 1);
+      meter.style.width = (p * 100) + '%';
+      if (p >= 1) { done(); return; }
+      raf = requestAnimationFrame(loop);
+    })(t0);
+    $('#walk-skip').addEventListener('click', done);
+    state.cleanup = () => { finished = true; cancelAnimationFrame(raf); };
+  }
+
   /* ---------- result ---------- */
   function showResult() {
     const r = state.recipe;
@@ -495,7 +554,7 @@
     const go = e.target.closest('[data-go]');
     if (go) show(go.dataset.go);
   });
-  $('#btn-to-kitchen').addEventListener('click', () => show('kitchen'));
+  $('#btn-to-kitchen').addEventListener('click', () => walkTo('kitchen', 'Carrying the basket home'));
   $('#btn-retry').addEventListener('click', () => startRecipe(state.recipe));
   $('#modal-close').addEventListener('click', () => { $('#modal').hidden = true; });
   $('#btn-how').addEventListener('click', () => modal('How to play',
