@@ -48,7 +48,8 @@ index.html        scenes: title, home, market, kitchen, result
 css/style.css     the whole look: photographic backgrounds, glass panels, steam, pot
 js/data.js        ingredients and recipes, each step with its real cooking reason
 js/game.js        engine: scenes, market, haggling, all six mini-games, scoring
-assets/img/       photographic art for backgrounds, ingredients and finished dishes
+assets/img/       photographic art: backgrounds, ingredients, dishes, and the cook's sprites
+assets/video/     looping cooking clips played behind each step
 ```
 
 ## Adding a dish
@@ -57,8 +58,9 @@ Everything about a recipe lives in `js/data.js`. Add an entry to `RECIPES` with 
 
 ## Roadmap
 
-- Character in the scenes: player walking house, market, kitchen
-- Real video and 3D cookware instead of the current styled pot
+- Real filmed footage behind each step (drop clips into assets/video with the same filenames, no code change)
+- A third walk pose and a stirring animation for the cook
+- 3D cookware instead of the current styled pot
 - Sound: market noise, sizzling, the knife on the board
 - More dishes: jollof, afang, banga, moi moi, pepper soup, akara
 - Timed service mode, customers and a restaurant to build up

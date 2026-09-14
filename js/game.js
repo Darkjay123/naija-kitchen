@@ -181,6 +181,8 @@
       state.money -= price;
       state.basket.push(id);
       el.classList.add('bought');
+      const her = $('#char-market');
+      if (her) { her.classList.add('hop'); setTimeout(() => her.classList.remove('hop'), 220); }
       $('#market-money').textContent = state.money.toLocaleString('en-NG');
       renderList();
       toast(discounted
@@ -497,10 +499,10 @@
 
   /* ---------- walk between places ---------- */
   function walkTo(dest, label) {
-    const road = $('#walk-road'), meter = $('#walk-meter'), img = $('#walk-img');
+    const road = $('#walk-road'), meter = $('#walk-meter'), walker = $('#walker');
     $('#walk-text').textContent = label;
-    img.style.transform = dest === 'home' ? 'scaleX(-1)' : 'none';
-    road.style.animationDirection = dest === 'home' ? 'reverse' : 'normal';
+    walker.classList.toggle('back', dest === 'kitchen');
+    road.style.animationDirection = dest === 'kitchen' ? 'reverse' : 'normal';
     $$('.scene').forEach(s => { s.hidden = s.dataset.scene !== 'walk'; });
 
     const dur = 2600;

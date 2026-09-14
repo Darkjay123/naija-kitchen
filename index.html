@@ -51,7 +51,7 @@
   <section class="scene" data-scene="walk" hidden>
     <div class="walk-sky"></div>
     <div class="walk-road" id="walk-road"></div>
-    <div class="walk-char"><img src="assets/img/char_walk.png" alt="" id="walk-img"></div>
+    <div class="walker" id="walker"><div class="walk-sprite"></div><div class="walk-shadow"></div></div>
     <div class="scrim soft"></div>
     <div class="walk-label"><p id="walk-text">Walking to the market</p>
       <div class="meter"><i id="walk-meter"></i></div>
@@ -67,6 +67,7 @@
       <span class="chip">&#8358;<b id="market-money">0</b></span>
       <span class="chip" id="market-title">Market</span></div>
     </header>
+    <img class="char-market" id="char-market" src="assets/img/char_market.png" alt="" />
     <div class="market-list" id="market-list"></div>
     <div class="scroll tight">
       <div class="stalls" id="stalls"></div>
@@ -86,6 +87,7 @@
       <span class="chip">Score <b id="kitchen-score">0</b></span></div>
     </header>
     <div class="cook-top">
+      <img class="char-cook" id="char-cook" src="assets/img/char_cook.png" alt="" />
       <div class="pot" id="pot"><div class="pot-body"></div><div class="pot-content" id="pot-content"></div>
         <div class="steam"><i></i><i></i><i></i></div></div>
     </div>
